@@ -1,0 +1,318 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>在线调试</title>
+  <link rel="icon" type="image/x-icon" href="/artemis/static/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="/artemis/styles/lib/jquery_jsonview.min.css">
+  <link rel="stylesheet" type="text/css" href="/artemis/styles/base/base.css">
+
+  <script src="/artemis/scripts/lib/jquery-1.8.3.min.js"></script>
+  <script src="/artemis/scripts/lib/jquery.cookie.js"></script>
+</head>
+
+<body>
+  <div class="clearfix debugger-shop">
+    <div class="left">
+      <div class="u-title">
+        <span class="title">调用信息</span>
+      </div>
+      <div class="u-infos">
+        <ul class="info-list">
+          <li class="item">
+            <span class="name">API名称：</span>
+            <span class="value api-name">获取当前AppKey的合作方对应的8200集成平台用户信息</span>
+          </li>
+          <li class="item">
+            <span class="name">协议：</span>
+            <span class="value protocol">HTTP</span>
+          </li>
+          <li class="item">
+            <span class="name">HTTP Method：</span>
+            <span class="value http-method">GET</span>
+          </li>
+          <li class="item">
+            <span class="name">数据类型：</span>
+            <span class="value resType">JSON</span>
+          </li>
+          <li class="item">
+            <span class="name">请求path：</span>
+            <span class="value path">/api/common/v1/userAuthRestService/getUserByUsername</span>
+          </li>
+          <li class="item">
+            <span class="name">安全认证：</span>
+            <span class="value authentication">认证</span>
+          </li>
+        </ul>
+      </div>
+      <div class="u-title">
+        <span class="title">请求参数</span>
+      </div>
+      <div class="u-infos">
+        <ul class="info-list">
+          <li class="item">
+            <div class="name">Header：</div>
+            <div class="value">
+              无
+            </div>
+          </li>
+          <li class="item">
+            <div class="name">Query：</div>
+            <div class="value">
+              无
+            </div>
+          </li>
+          <li class="item">
+            <div class="name">parameterPath：</div>
+            <div class="value">
+              无
+            </div>
+          </li>
+          <li class="item">
+            <div class="name">Body：</div>
+            <div class="value">
+              无
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="u-title">
+        <span class="title">认证信息</span>
+      </div>
+
+      <div class="u-infos">
+        <ul class="info-list">
+          <li class="item">
+            <div class="name">是否使用Mock：</div>
+            <div class="value m-get-data">
+              <div class="mode-mock">
+                <label for="mock">是</label>
+                <input type="radio" name="mode" id="mock" value="0">
+                <div class="custom active">
+                  <span class="circle"></span>
+                </div>
+              </div>
+              <div class="mode-real">
+                <label for="real">否</label>
+                <input type="radio" name="mode" id="real" value="1">
+                <div class="custom">
+                  <span class="circle"></span>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="item app-key-item hide">
+            <div class="name">APPkey：</div>
+            <div class="value">
+              <input name="appKey" class="required">
+              <span class="hint">*</span>
+            </div>
+          </li>
+          <li class="item app-secret-item hide">
+            <div class="name">APPsecret：</div>
+            <div class="value">
+              <input name="appSecret" class="required">
+              <span class="hint">*</span>
+            </div>
+          </li>
+          <li class="item rmb-appinfo-item">
+            <div class="name">&nbsp;</div>
+            <div class="value">
+              <input type="checkbox" name="rmbAppInfo" style="width:14px;height:14px;vertical-align:middle;">
+              <span>记住密码</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="">
+        <a href="javascript:void(0)" class="btn-request">发送请求</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/artemis/scripts/lib/jquery.nicescroll.js"></script>
+  <script src="/artemis/scripts/lib/crypto-js/crypto-js.js"></script>
+  <script src="/artemis/scripts/api_gateway/devjs/debug.js"></script>
+  <script src="/artemis/scripts/lib/jquery_jsonView.js"></script>
+  <script src="/artemis/scripts/lib/select2_zh-CN.full.js"></script>
+  <script language="JavaScript">
+    $(function () {
+      if ($("input[name=appKey]").is(':visible')) {
+        readCookie();
+      }
+
+      $('select').trigger('change').select2({
+        minimumResultsForSearch: Infinity
+      });
+
+      $(".debugger-shop .right .result").niceScroll({
+        cursorcolor: '#31b4e1',
+        cursorborder: "none"
+      });
+      //读取cookie
+      function readCookie() {
+        $("input[name=rmbAppInfo]").prop("checked", $.cookie("rmbAppInfo") == "true" ? true : false);
+        $("input[name=appKey]").val($.cookie("appKey"));
+        $("input[name=appSecret]").val($.cookie("appSecret"));
+      }
+      //存储信息到cookie
+      function saveAppInfo() {
+        if ($("input[name=rmbAppInfo]").prop("checked") == true) {
+          var app_key = $("input[name=appKey]").val();
+          var app_secret = $("input[name=appSecret]").val();
+          $.cookie("rmbAppInfo", true);
+          $.cookie("appKey", app_key);
+          $.cookie("appSecret", app_secret);
+        } else {
+          $.cookie("rmbAppInfo", "false", { expires: -1 });
+          $.cookie("appKey", '', { expires: -1 });
+          $.cookie("appSecret", '', { expires: -1 });
+        }
+      }
+      /*是否mock，选择是否显示APPKey和APPSecret*/
+      $("#mock").click(function () {
+        $(this).prop("checked", true).siblings(".custom").addClass("active");
+        $("#real").removeAttr('checked');
+        $('.mode-real').find('.custom').removeClass("active");
+        $('.app-key-item,.app-secret-item').addClass('hide').find('input');
+      });
+      $("#real").click(function () {
+        $(this).prop("checked", true).siblings(".custom").addClass("active");
+        $("#mock").removeAttr('checked');
+        $('.mode-mock').find('.custom').removeClass("active");
+        $('.app-key-item,.app-secret-item').removeClass('hide');
+      });
+      /*显示发送成功后的返回结果*/
+      function showReturnData(data, status, jqXHR) {
+        var $result = $('.result').empty();
+        if ($('.resType').text().toLowerCase() == 'json') {
+          $result.JSONView(jqXHR.responseText);
+        } else {
+          $result.text(jqXHR.responseText);
+        }
+      }
+      function showErrorData(jqXHR, status, error) {
+        try {
+          $('.result').empty().JSONView(jqXHR.responseText);
+        } catch (e) {
+          $('.result').empty().text(jqXHR.responseText);
+        }
+      }
+
+      function submitData() {
+        var method = $.trim($('.http-method').text());
+        var path = $.trim($('.path').text());
+        var api = new ArtemisApi(method, '/artemis' + path);
+
+        api.setContentType($('[name=contentType]').val());
+
+        if ($('.pos-header').size()) {
+          var header = {};
+          $('.pos-header').each(function () {
+            var key = $(this).find('.para-name').text();
+            var value = $(this).find('input').val();
+            if (Utils.notBlank(value)) {
+              header[key] = value;
+            }
+          });
+          api.setHeader(header);
+        }
+        if ($('.pos-parameter-path').size()) {
+          var pathParam = {};
+          $('.pos-parameter-path').each(function () {
+            var key = $(this).find('.para-name').text();
+            var value = $(this).find('input').val();
+            if (Utils.notBlank(value)) {
+              pathParam[key] = value;
+            }
+          });
+          api.setpathParam(pathParam);
+        }
+        if ($('.pos-query').size()) {
+          var query = {};
+          $('.pos-query').each(function () {
+            var key = $(this).find('.para-name').text();
+            var value = $(this).find('input').val();
+            if (Utils.notBlank(value)) {
+              query[key] = value;
+            }
+          });
+          api.setQuery(query);
+        }
+        if (method.toLocaleLowerCase() == 'post' || method.toLocaleLowerCase() == 'put') {
+          if ($('.pos-body').size()) {
+            var body = {};
+            $('.pos-body').each(function () {
+              var key = $(this).find('.para-name').text();
+              var value = $(this).find('input').val();
+              if (Utils.notBlank(value))
+                body[key] = value;
+            });
+            api.setBodyForm(body);
+          } else {
+            var bodyStr = $("textarea[name=bodyValue]").val();
+            api.setBodyStr(bodyStr);
+          }
+        }
+
+        if ($('.authentication').text() == '认证') {
+          if ($('input[name=mode]:checked').val() == '1') {
+            api.setAppSecret($.trim($('input[name=appKey]').val()), $.trim($('input[name=appSecret]').val()));
+          } else {
+            api.setAppSecret('mock', 'mock');
+          }
+        } else {
+          if ($('input[name=mode]:checked').val() == '0') {
+            api.setAppSecret('mock', 'mock');
+          }
+        }
+        api.request(showReturnData, showErrorData);
+      };
+
+      $('.btn-request').on('click', function () {
+        var ct_value = $('textarea[name=bodyValue]').val();
+        var bool = true;
+        if ($('select[name=contentType]').val() == "application/json;charset=UTF-8" && ct_value != "") {
+          try {
+            JSON.parse(ct_value);
+          } catch (e) {
+            bool = false;
+            $('textarea[name=bodyValue]').addClass('b-red').siblings('.alarm').css('display', 'inline-block').text("json数据格式有误！");
+          }
+        }
+        if (!bool) {
+          return;
+        }
+        if ($('input.required:visible').size()) {
+          $('input.required:visible').each(function () {
+            if ($(this).val() == "") {
+              $(this).addClass('b-red').siblings('.hint').text('必填项，不能为空！');
+              return false;
+            } else if ($('input.required:visible').index($(this)) == $('input.required:visible').length - 1) {
+              $('.result').empty();
+              saveAppInfo();
+              submitData();
+            }
+          });
+        } else {
+          $('.result').empty();
+          saveAppInfo();
+          submitData();
+        }
+      });
+
+      $("input.required").on('focus', function () {
+        $("input.required").removeClass('b-red').siblings('.hint').text('*');
+      });
+
+      $("textarea[name=bodyValue]").on('focus', function () {
+        $(this).removeClass('b-red').siblings('.alarm').hide().text('');
+      });
+    });
+  </script>
+
+
+
+</body>
+
+</html>

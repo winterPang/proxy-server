@@ -1,0 +1,183 @@
+<html>
+
+<head>
+  <title>海康摄像</title>
+</head>
+
+<body>
+  <div>cessssss</div>
+  <h2>FACE++ WEB验证</h2>
+  <div>
+    <form id="form" enctype="mmultipart/form-data">
+      <label for="api_key">APPKey</label>
+      <input type="text" id="api_key" name="api_key" value="isTcntt2s8HyINXJ9mPMpsKlgLDPLjy5" />
+      <br/><label for="api_secret">APPSecret</label>
+      <input type="text" id="api_secret" name="api_secret" value="hQsN1JiyAvMtD1c9k9c3_Qx_3VhLkRpQ">
+      <br/><label for="comparison_type">comparison_type</label>
+      <input type="text" id="comparison_type" name="comparison_type" value="2">
+      <br/><label for="idcard_name">idcard_name</label>
+      <input type="text" id="idcard_name" name="idcard_name" value="2">
+      <br/><label for="idcard_number">idcard_number</label>
+      <input type="text" id="idcard_number" name="idcard_number" value="2">
+      <br/><label for="uuid">uuid</label>
+      <input type="text" id="uuid" name="uuid" value="2">
+      <br/><label for="image_ref">image_ref</label>
+      <input type="file" id="image_ref" name="image_ref"   multiple="multiple"/>
+      <br/><label for="return_url">return_url</label>
+      <input type="text" id="return_url" name="return_url" value="http://127.0.0.1/return.html">
+      <br/><label for="notify_url">notify_url</label>
+      <input type="text" id="notify_url" name="notify_url" value="http://127.0.0.1/notify_url">
+      <br/><label for="biz_no">biz_no</label>
+      <input type="text" id="biz_no" name="biz_no" value="2">
+    </form>
+  </div>
+  <button id='test'>海康测试按钮</button>
+  <button id='faceID'>face++测试</button>
+</body>
+<!-- 加密库 -->
+<script src="./lib/crypto/crypto.js"></script>
+<script src="./js/debug.js"></script>
+<script src="./lib/jquery-3.2.1.min.js"></script>
+<script>
+  $(document).ready(function () {
+    //提交加密
+    function submitData() {
+      var method = "GET";
+      var path = "/artemis/api/artemis/v1/agreementService/securityParam/appKey/22111489";
+      var api = new ArtemisApi(method, path);
+      // var APPKey = '26208115';
+      // var APPSecret = '1M1symKzlmprD9NRH1wp';
+      var APPKey = '22111489';
+      var APPSecret = 'LeogU6aQkW2UCQDFi2hL';
+
+      // api.setContentType($('[name=contentType]').val());
+
+      // $('.pos-header').size() == 0
+      // if ($('.pos-header').size()) {
+      //   var header = {};
+      //   $('.pos-header').each(function () {
+      //     var key = $(this).find('.para-name').text();
+      //     var value = $(this).find('input').val();
+      //     if (Utils.notBlank(value)) {
+      //       header[key] = value;
+      //     }
+      //   });
+      //   api.setHeader(header);
+      // }
+
+      // $('.pos-parameter-path').size() == 0
+      // if ($('.pos-parameter-path').size()) {
+      //   var pathParam = {};
+      //   $('.pos-parameter-path').each(function () {
+      //     var key = $(this).find('.para-name').text();
+      //     var value = $(this).find('input').val();
+      //     if (Utils.notBlank(value)) {
+      //       pathParam[key] = value;
+      //     }
+      //   });
+      //   api.setpathParam(pathParam);
+      // }
+      // $('.pos-query').size() == 0
+      // if ($('.pos-query').size()) {
+      //   var query = {};
+      //   $('.pos-query').each(function () {
+      //     var key = $(this).find('.para-name').text();
+      //     var value = $(this).find('input').val();
+      //     if (Utils.notBlank(value)) {
+      //       query[key] = value;
+      //     }
+      //   });
+      //   api.setQuery(query);
+      // }
+      // if (method.toLocaleLowerCase() == 'post' || method.toLocaleLowerCase() == 'put') {
+      //   if ($('.pos-body').size()) {
+      //     var body = {};
+      //     $('.pos-body').each(function () {
+      //       var key = $(this).find('.para-name').text();
+      //       var value = $(this).find('input').val();
+      //       if (Utils.notBlank(value))
+      //         body[key] = value;
+      //     });
+      //     api.setBodyForm(body);
+      //   } else {
+      //     var bodyStr = $("textarea[name=bodyValue]").val();
+      //     api.setBodyStr(bodyStr);
+      //   }
+      // }
+
+      // if ($('.authentication').text() == '认证') {
+      //   if ($('input[name=mode]:checked').val() == '1') {
+      //     api.setAppSecret($.trim($('input[name=appKey]').val()), $.trim($('input[name=appSecret]').val()));
+      //   } else {
+      //     api.setAppSecret('mock', 'mock');
+      //   }
+      // } else {
+      //   if ($('input[name=mode]:checked').val() == '0') {
+      //     api.setAppSecret('mock', 'mock');
+      //   }
+      // }
+      api.setAppSecret(APPKey, APPSecret);
+      api.request(showReturnData, showErrorData);
+    };
+    //成功回掉
+    function showReturnData(data) {
+      console.log('success')
+      console.log(data)
+    }
+    //失败回掉
+    function showErrorData(err) {
+      console.log('err')
+      console.log(err)
+    }
+
+    $('#test').click(function () {
+      submitData();
+    })
+
+    $('#faceID').click(function () {
+      debugger
+      var formData = new FormData();
+      var api_key = $('#api_key').val();
+      var api_secret = $('#api_secret').val();
+      var comparison_type = $('#comparison_type').val();
+      // var idcard_name = $('#idcard_name').val();
+      // var idcard_number = $('#idcard_number').val();
+      var uuid = $('#uuid').val();
+      var image_ref = $('#image_ref')[0].files;
+      var return_url = $('#return_url').val();
+      var notify_url = $('#notify_url').val();
+      var biz_no = $('#biz_no').val();
+      formData.append("api_key",api_key);
+      formData.append("api_secret",api_secret);
+      formData.append("comparison_type",comparison_type);
+      // formData.append("idcard_name",idcard_name);
+      // formData.append("idcard_number",idcard_number);
+      formData.append("uuid",uuid);
+      for(var i = 0; i<image_ref.length;i++){
+        formData.append("image_ref"+i,image_ref[i]);
+      }
+      formData.append("return_url",return_url);
+      formData.append("notify_url",notify_url);
+      formData.append("biz_no",biz_no);
+      console.log(1111)
+      $.ajax({
+        url: "/faceid/liveness/v2/get_token",
+        type: "post",
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+          debugger
+          alert("操作成功！");
+        },
+        error: function (e) {
+          debugger
+          alert("网络错误，请重试！！");
+        }
+      });
+    })
+  });
+</script>
+
+</html>

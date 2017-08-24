@@ -1,0 +1,15 @@
+.form {
+    width: 300px;
+    position: absolute;
+    left: 500px;
+    top: 50px;
+}
+input.submit {
+    top: 15px;
+    position: relative;
+}
+
+input, label {
+    position: relative;
+    left: 30px;
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8" />
+
+<head>
+    <link rel="stylesheet" href="../ocx_demo/ocx.css" />
+    <script type="text/javascript" for="PlayViewOCX" event="SetWndNum(1)"></script>
+
+    <script>
+        //实际操作中在关闭或者刷新前调用查询加载状态的接口保证OCX和播放器进程能正常关闭
+        window.onbeforeunload = function () {
+            var a;
+            var OCXobj = document.getElementById("PlayViewOCX");
+            a = OCXobj.ContainOCX_GetInitState();
+            if (a == 0) {
+                //已经加载完成正常刷新
+            } else {
+                //还没有加载完成弹出提示
+                return '插件还未加载完成...'
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="func-point">&nbsp;&nbsp;监控画面</div>
+    <div class="video-position" style="width:500px; height:500px">
+        <input type="hidden" name="config" id="config" value="ReqType:PlayReal;wndcount:1;" />
+        <!-- 添加预览控件（需要先在windows下注册） -->
+        <object classid="CLSID:7E393848-7238-4CE3-82EE-44AF444B240A" id="PlayViewOCX" wmode="opaque" width=" 100%" height="100%"
+            name="PlayViewOCX">
+        </object>
+        <!-- <OBJECT  id="PlayViewOCX"  wmode="opaque" width=" 100%" height="100%"
+        type="application/x-itst-activex" clsid="{7E393848-7238-4CE3-82EE-44AF444B240A}"
+        name="PlayViewOCX"></OBJECT> -->
+    </div>
+
+
+
+    <div class="form">
+        <label for="PalyType">PalyType:</label>
+        <br />
+        <input type="text" class="PalyType text" value="PlayReal" />
+        <br />
+        <label for="SvrIp">SvrIp:</label>
+        <br />
+        <input type="text" class="SvrIp text" value="open8200.hikvision.com" />
+        <br />
+        <label for="SvrPort">SvrPort:</label>
+        <br />
+        <input type="text" class="SvrPort text" value="443" />
+        <br />
+        <label for="appkey">appkey:</label>
+        <br />
+        <input type="text" class="appkey text" value="25422917" />
+        <br />
+        <label for="appSecret">appSecret:</label>
+        <br />
+        <input type="text" class="appSecret text" />
+        <br />
+        <label for="time">time:</label>
+        <br />
+        <input type="text" class="time text" />
+        <br />
+        <label for="timeSecret">timeSecret:</label>
+        <br />
+        <input type="text" class="timeSecret text" />
+        <br />
+        <label for="httpsflag">httpsflag:</label>
+        <br />
+        <input type="text" class="httpsflag text" value="1" />
+        <br />
+        <label for="CamList">CamList:</label>
+        <br />
+        <input type="text" class="CamList text" value="14000000001310014550" />
+        <br />
+        <input type="submit" class="submit" />
+    </div>
+    <div>
+        <p>appSecret, time, timeSecret去
+            <a href="https://open8200.hikvision.com/artemis/portal/documentCenter/showDocumentCenter?docId=170#api4" target="_blank">api网关</a>获取
+        </p>
+        <p>加载失败请先确定3个步骤</p>
+        <p>1.是对应版本的VideoClient么?如果不确定请<b>手动</b>删除旧的文件夹,并安装新的.</p>
+        <p>2.是使用的32位IE浏览器么?(通常位置是"C:\Program Files (x86)\Internet Explorer")并使用<b>管理员方式打开</b>.</p>
+        <p>3.打开IE后打开Internet选项保证安全设置中支持ActiveX加载.</p>
+    </div>
+    <button class="close">结束OCX进程</button>
+
+    <script type="text/javascript" src="..//ocx_demo/jquery-1.12.1.js"></script>
+    <script type="text/javascript" src="..//ocx_demo/ocx.js"></script>
+
+</body>
+
+</html>
